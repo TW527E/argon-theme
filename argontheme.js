@@ -472,10 +472,76 @@ if (argonConfig.headroom == "true"){
 }
 
 /*瀑布流布局*/
-function waterflowInit() {
-	if (argonConfig.waterflow_columns == "1") {
+let waterflowResizeObserver;
+let waterflowResizeObservedContainer;
+let waterflowResizeObservedItems = new Set();
+let waterflowLayoutScheduled = false;
+let waterflowLastColumns;
+function scheduleWaterflowInit(){
+	if (waterflowLayoutScheduled){
 		return;
 	}
+	waterflowLayoutScheduled = true;
+	requestAnimationFrame(function(){
+		waterflowLayoutScheduled = false;
+		if (pjaxLoading || $("#main").hasClass("post-list-pjax-loading")){
+			return;
+		}
+		waterflowInit(true);
+	});
+}
+function observeWaterflowSizeChanges(container, items){
+	if (typeof ResizeObserver == "undefined"){
+		return;
+	}
+	if (!waterflowResizeObserver){
+		waterflowResizeObserver = new ResizeObserver(function(){
+			if (pjaxLoading || $("#main").hasClass("post-list-pjax-loading")){
+				return;
+			}
+			scheduleWaterflowInit();
+		});
+	}
+	if (waterflowResizeObservedContainer !== container){
+		if (waterflowResizeObservedContainer){
+			waterflowResizeObserver.unobserve(waterflowResizeObservedContainer);
+		}
+		waterflowResizeObserver.observe(container);
+		waterflowResizeObservedContainer = container;
+	}
+	let currentItems = new Set(items);
+	waterflowResizeObservedItems.forEach(function(item){
+		if (!currentItems.has(item)){
+			waterflowResizeObserver.unobserve(item);
+			waterflowResizeObservedItems.delete(item);
+		}
+	});
+	currentItems.forEach(function(item){
+		if (!waterflowResizeObservedItems.has(item)){
+			waterflowResizeObserver.observe(item);
+			waterflowResizeObservedItems.add(item);
+		}
+	});
+}
+function waterflowInit(keepInColumn = false) {
+	if (argonConfig.waterflow_columns == "1") {
+		waterflowLastColumns = undefined;
+		return;
+	}
+	if (pjaxLoading || $("#main").hasClass("post-list-pjax-loading")){
+		return;
+	}
+	let $container = $("#main.article-list");
+	if (!$container.length){
+		if (waterflowResizeObserver){
+			waterflowResizeObserver.disconnect();
+			waterflowResizeObservedContainer = undefined;
+			waterflowResizeObservedItems.clear();
+		}
+		waterflowLastColumns = undefined;
+		return;
+	}
+	let containerWidth = $container[0].clientWidth;
 	$("#main.article-list img").each(function(index, ele){
 		ele.onload = function(){
 			waterflowInit();
@@ -483,7 +549,7 @@ function waterflowInit() {
 	});
 	let columns;
 	if (argonConfig.waterflow_columns == "2and3") {
-		if ($("#main").outerWidth() > 1000) {
+		if (containerWidth > 1000) {
 			columns = 3;
 		} else {
 			columns = 2;
@@ -491,9 +557,9 @@ function waterflowInit() {
 	}else{
 		columns = parseInt(argonConfig.waterflow_columns);
 	}
-	if ($("#main").outerWidth() < 650 && columns == 2) {
+	if (containerWidth < 650 && columns == 2) {
 		columns = 1;
-	}else if ($("#main").outerWidth() < 800 && columns == 3) {
+	}else if (containerWidth < 800 && columns == 3) {
 		columns = 1;
 	}
 
@@ -517,29 +583,45 @@ function waterflowInit() {
 	}
 	$("#primary").css("transition", "none")
 		.addClass("waterflow");
-	let $container = $("#main.article-list");
-	if (!$container.length){
-		return;
-	}
-	let $items = $container.find("article.post:not(.no-results), .shuoshuo-preview-container");
+	let $items = $container.children("article.post:not(.no-results), .shuoshuo-preview-container");
 	columns = Math.max(Math.min(columns, $items.length), 1);
+	observeWaterflowSizeChanges($container[0], $items.toArray());
 	if (columns == 1) {
+		waterflowLastColumns = 1;
 		$container.removeClass("waterflow");
-		$items.css("transition", "").css("position", "").css("width", "").css("top", "").css("left", "").css("margin", "");
+		$items.css("transition", "").css("position", "").css("width", "").css("top", "").css("left", "").css("margin", "").css("z-index", "").removeAttr("waterflow-column");
 		$(".waterflow-placeholder").remove();
+		return;
 	}else{
 		$container.addClass("waterflow");
+		// Keep column offsets tied to the container instead of freezing a
+		// one-time pixel measurement. Browser zoom can change CSS-pixel rounding
+		// while the page, fonts and card contents are still being laid out.
+		let columnWidthPercent = 100 / columns;
+		let columnGap = 10;
+		let itemWidth = "calc(" + columnWidthPercent + "% - " + (columnGap * (columns - 1) / columns) + "px)";
+		let preserveColumns = keepInColumn && waterflowLastColumns === columns;
 		$items.each(function(index, item) {
 			let $item = $(item);
 			$item.css("transition", "none")
 				.css("position", "absolute")
-				.css("width", "calc(" + (100 / columns) + "% - " + (10 * (columns - 1) / columns) + "px)").css("margin", 0);
-			let itemHeight = $item.outerHeight() + 10;
+				.css("width", itemWidth).css("margin", 0);
+			// offsetHeight measures the layout box and is not reduced by the
+			// card-show scale transform that runs while the page is loading.
+			let itemHeight = item.offsetHeight + columnGap;
 			let pos = getMinHeightPosition();
-			$item.css("top", heights[getMinHeightPosition()] + "px")
-				.css("left", (pos * $item.outerWidth() + 10 * pos) + "px");
+			let originalPos = parseInt($item.attr("waterflow-column"));
+			if (preserveColumns && !isNaN(originalPos) && originalPos >= 0 && originalPos < columns) {
+				pos = originalPos;
+			}
+			let leftPosition = "calc(" + (columnWidthPercent * pos) + "% + " + (columnGap * pos / columns) + "px)";
+			$item.css("top", heights[pos] + "px")
+				.css("left", leftPosition);
 			heights[pos] += itemHeight;
+			$item.css("z-index", pos)
+				.attr("waterflow-column", pos);
 		});
+		waterflowLastColumns = columns;
 	}
 	if ($(".waterflow-placeholder").length) {
 		$(".waterflow-placeholder").css("height", getMaxHeight() + "px");
@@ -552,6 +634,14 @@ if (argonConfig.waterflow_columns != "1") {
 	$(window).resize(function(){
 		waterflowInit();
 	});
+	$(window).on("load", function(){
+		waterflowInit();
+	});
+	if (document.fonts && document.fonts.ready) {
+		document.fonts.ready.then(function(){
+			waterflowInit();
+		});
+	}
 	new MutationObserver(function(mutations, observer){
 		waterflowInit();
 	}).observe(document.querySelector("#primary"), {
@@ -1740,6 +1830,9 @@ function lazyloadInit(){
 			load: function () {
 				$(this).addClass("lazyload-loaded");
 				$(this).parent().removeClass("lazyload-container-unload");
+				if ($(this).closest(".shuoshuo-preview-container").length) {
+					waterflowInit();
+				}
 			}
 		})
 	);
@@ -1874,6 +1967,7 @@ $(document).pjax("a[href]:not([no-pjax]):not(.no-pjax):not([target='_blank']):no
 		if (waterflowOn){
 			$card.css("left", "10px");
 			$card.css("width", "calc(100% - 20px)");
+			$card.css("z-index", "3");
 		}
 		$("body,html").animate({
 			scrollTop: 0
@@ -2115,6 +2209,9 @@ $(document).on("click" , ".shuoshuo-upvote" , function(){
 //折叠长说说
 function foldLongShuoshuo(){
 	if (argonConfig.fold_long_shuoshuo == false){
+		// Pangu and other content processors run after the initial waterfall
+		// layout and can change line wrapping even when folding is disabled.
+		waterflowInit();
 		return;
 	}
 	$("#main .shuoshuo-foldable > .shuoshuo-content").each(function(){
@@ -2126,10 +2223,12 @@ function foldLongShuoshuo(){
 			$(this).append("<div class='show-full-shuoshuo'><button class='btn btn-outline-primary'><i class='fa fa-angle-down' aria-hidden='true'></i> " + __("展开") + "</button></div>");
 		}
 	});
+	waterflowInit();
 }
 foldLongShuoshuo();
 $(document).on("click" , ".show-full-shuoshuo" , function(){
 	$(this).parent().removeClass("shuoshuo-folded").addClass("shuoshuo-unfolded");
+	waterflowInit(true);
 });
 
 //颜色计算
