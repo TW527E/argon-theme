@@ -1,3 +1,26 @@
+# 🔧 TW527E 修正版：修復非 100% 縮放下的瀑布流「說說」錯位
+
+> 本修正版解決文章列表使用 **2 欄、3 欄或 2／3 欄自動調整** 時，瀏覽器在 **非 100% 頁面縮放下重新整理** 後，「說說」卡片可能出現錯位、異常大間距、重疊或超出內容欄的問題。原始 Argon README 的內容完整保留於下方，本節僅新增本修正版說明。
+
+## 本次修復內容
+
+- 改以文章列表容器的 `clientWidth` 判定欄數，避免縮放後使用不同寬度基準。
+- 欄寬與水平位置改用相對容器的 CSS `calc()` 計算，避免載入瞬間的像素量測與縮放捨入誤差被固定下來。
+- 卡片高度改用不受載入縮放動畫影響的 `offsetHeight`。
+- 在頁面載入、字型完成、Pangu 排版、延遲圖片載入及「說說」展開後重新排列。
+- 加入 `ResizeObserver` 與 `requestAnimationFrame` 合併重排；內容尺寸改變時會自動校正，且不會形成持續重排。
+- 保護 PJAX 入文動畫，載入期間不會被瀑布流重排覆寫；離開列表時會清理 observer。
+- 修正「說說」預覽範本中多餘的 `</article>` 結尾標籤。
+- 即使 Argon 後台啟用了 CDN，主要 `argontheme.js` 仍會從本機主題載入並以 `filemtime` 更新版本參數，確保修正版不會被上游 CDN 舊檔覆蓋。
+
+## 驗證結果
+
+- 實站 Safari：非 100% 縮放後重新整理，已確認「說說」瀑布流排列正常。
+- Chrome 真實頁面縮放回歸：`2`、`3`、`2and3` 三種設定在 80%、125%、150%、200%、250% 下均無卡片重疊或水平溢出。
+- `argontheme.js` 通過語法檢查，修改內容通過 Git whitespace 檢查。
+
+---
+
 ![Argon](https://cdn.jsdelivr.net/gh/solstice23/cdn@master/argon_new_animate.svg)
 
 **简体中文** | [繁體中文](README_tw.md) | [English](README_en.md) | [Russian](README_ru.md)
