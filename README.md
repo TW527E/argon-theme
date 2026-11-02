@@ -19,6 +19,14 @@
 - Chrome 真實頁面縮放回歸：`2`、`3`、`2and3` 三種設定在 80%、125%、150%、200%、250% 下均無卡片重疊或水平溢出。
 - `argontheme.js` 通過語法檢查，修改內容通過 Git whitespace 檢查。
 
+## 「說說」開放 REST API
+
+「說說」文章類型（`shuoshuo`）已開放 WordPress REST API，路由為 `/wp-json/wp/v2/shuoshuo`，讓外部工具（例如 [Wherry](https://github.com/TW527E/Wherry)）能以[應用程式密碼](https://make.wordpress.org/core/2020/11/05/application-passwords-integration-guide/)發布、刪除說說。
+
+- 後台編輯說說會改用區塊編輯器（REST API 是區塊編輯器的前提）。
+- 未登入的訪客只能讀取已公開的說說，與前台頁面相同；發布與刪除仍需對應的帳號權限。
+- 網站需使用「樸素」以外的固定網址設定，`/wp-json/` 路徑才可用。
+
 ---
 
 ![Argon](https://cdn.jsdelivr.net/gh/solstice23/cdn@master/argon_new_animate.svg)

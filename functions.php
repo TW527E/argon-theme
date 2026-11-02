@@ -3147,7 +3147,9 @@ function init_shuoshuo(){
 		'hierarchical' => false,
 		'menu_position' => null,
 		'menu_icon' => 'dashicons-format-quote',
-		'supports' => array('editor', 'author', 'title', 'custom-fields', 'comments')
+		'supports' => array('editor', 'author', 'title', 'custom-fields', 'comments'),
+		//开放 REST API（/wp-json/wp/v2/shuoshuo），供外部工具发布说说；编辑器随之改为区块编辑器
+		'show_in_rest' => true
 	);
 	register_post_type('shuoshuo', $args);
 }
