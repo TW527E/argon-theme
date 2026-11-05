@@ -1814,8 +1814,25 @@ $.fancybox.defaults.i18n = {
 		DOWNLOAD: "下载",
 		SHARE: "分享",
 		ZOOM: "缩放"
+	},
+	zh_TW: {
+		CLOSE: "關閉",
+		NEXT: "下一張",
+		PREV: "上一張",
+		ERROR: "圖片載入失敗",
+		PLAY_START: "開始幻燈片播放",
+		PLAY_STOP: "暫停幻燈片播放",
+		FULL_SCREEN: "全螢幕",
+		THUMBS: "縮圖",
+		DOWNLOAD: "下載",
+		SHARE: "分享",
+		ZOOM: "縮放"
 	}
 };
+/*Fancybox 找不到语言时会回退到不存在的 i18n.en 并报错，导致图片无法打开*/
+if (!$.fancybox.defaults.i18n[argonConfig.language]){
+	$.fancybox.defaults.lang = "zh_CN";
+}
 
 /*Lazyload*/
 function lazyloadInit(){
