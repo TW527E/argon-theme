@@ -13,6 +13,14 @@
 - 修正「說說」預覽範本中多餘的 `</article>` 結尾標籤。
 - 即使 Argon 後台啟用了 CDN，主要 `argontheme.js` 仍會從本機主題載入並以 `filemtime` 更新版本參數，確保修正版不會被上游 CDN 舊檔覆蓋。
 
+## 安裝本修正版
+
+下方原始 README 的「安装」連結會下載上游 `solstice23/argon-theme`，**不含**本修正版的改動。要安裝本修正版：
+
+1. 下載 [本 fork 的 master 封裝](https://github.com/TW527E/argon-theme/archive/refs/heads/master.zip)。
+2. 解壓後把資料夾 `argon-theme-master` 改成目前 Argon 主題在 `wp-content/themes/` 的資料夾名稱（例如 `argon`），重新壓縮成 ZIP，於 WordPress 後台「外觀 → 主題 → 安裝主題 → 上傳主題」上傳並選擇「以上傳的主題取代目前的主題」；或直接以 FTP／SSH 覆蓋該資料夾。資料夾名稱不同時，WordPress 會把它當成另一個主題。
+3. 若後台啟用了 CDN，主要 `argontheme.js` 仍會從本機主題載入，不需額外設定。
+
 ## 驗證結果
 
 - 實站 Safari：非 100% 縮放後重新整理，已確認「說說」瀑布流排列正常。
@@ -66,6 +74,8 @@ Hexo 版本 : [github.com/solstice23/hexo-theme-argon](https://github.com/solsti
 # 安装
 
 在 [Release](https://github.com/solstice23/argon-theme/releases) 页面下载 .zip 文件，在 WordPress 后台 "主题" 页面上传并安装。
+
+> 此為上游原版的安裝方式；要安裝 TW527E 修正版，請見頁首「安裝本修正版」。
 
 # 文档
 

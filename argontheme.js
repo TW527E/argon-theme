@@ -618,7 +618,10 @@ function waterflowInit(keepInColumn = false) {
 			$item.css("top", heights[pos] + "px")
 				.css("left", leftPosition);
 			heights[pos] += itemHeight;
-			$item.css("z-index", pos)
+			// No permanent z-index: a stacking context per card would trap
+			// Zoomify's enlarged image below its body-level overlay. The PJAX
+			// open animation raises the clicked card on its own.
+			$item.css("z-index", "")
 				.attr("waterflow-column", pos);
 		});
 		waterflowLastColumns = columns;
