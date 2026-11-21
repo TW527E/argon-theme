@@ -1,17 +1,28 @@
-					<footer id="footer" class="site-footer card shadow-sm border-0">
-						<?php
-							echo get_option('argon_footer_html');
-						?>
-						<div>Theme <a href="https://github.com/solstice23/argon-theme" target="_blank"><strong>Argon</strong></a><?php if (get_option('argon_hide_footer_author') != 'true') {echo " By solstice23"; }?></div>
-					</footer>
-				</main>
-			</div>
+			</main>
 		</div>
-		<?php
-			$argon_main_script_path = get_template_directory() . '/argontheme.js';
-			$argon_main_script_version = file_exists($argon_main_script_path) ? filemtime($argon_main_script_path) : $GLOBALS['theme_version'];
-		?>
-		<script src="<?php echo esc_url(get_template_directory_uri() . '/argontheme.js?v=' . $argon_main_script_version); ?>"></script>
+	</div>
+	<footer id="footer" class="liquid-footer liquid-frame">
+		<div class="liquid-footer-content">
+			<a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_html(get_bloginfo('name')); ?></a>
+			<?php $footer_content = get_option('argon_footer_html', ''); ?>
+			<?php if ($footer_content !== '') : ?>
+				<div class="liquid-footer-extra"><?php echo wpautop($footer_content); ?></div>
+			<?php endif; ?>
+		</div>
+		<div class="liquid-footer-tools">
+			<button type="button" class="liquid-lite-toggle" data-liquid-lite aria-pressed="false" hidden>
+				<i class="fa fa-tachometer" aria-hidden="true"></i>
+				<?php esc_html_e('Lightweight mode', 'liquid-glass'); ?>
+			</button>
+			<span class="liquid-footer-credit">
+				<a href="https://github.com/TW527E/argon-theme/tree/liquid-glass-argon-theme">Liquid Glass Argon Theme</a>
+				/ <a href="https://tw527e.zip/">TW527E</a>
+				<span aria-hidden="true">·</span>
+				<?php esc_html_e('Based on', 'liquid-glass'); ?>
+				<a href="https://github.com/solstice23/argon-theme">Argon</a><?php if (get_option('argon_hide_footer_author') !== 'true') echo ' / solstice23'; ?>
+			</span>
+		</div>
+	</footer>
 		<?php if (get_option('argon_math_render') == 'mathjax3') { /*Mathjax V3*/?>
 			<script>
 				window.MathJax = {
@@ -75,14 +86,7 @@
 			<link rel="stylesheet" href="<?php echo $GLOBALS['assets_path']; ?>/assets/vendor/highlight/styles/<?php echo get_option('argon_code_theme') == '' ? 'vs2015' : get_option('argon_code_theme'); ?>.css">
 		<?php }?>
 
-	</div>
-</div>
-<?php 
-	wp_enqueue_script("argonjs", $GLOBALS['assets_path'] . "/assets/js/argon.min.js", null, $GLOBALS['theme_version'], true);
-?>
 <?php wp_footer(); ?>
-</body>
-
 <?php echo get_option('argon_custom_html_foot'); ?>
-
+</body>
 </html>

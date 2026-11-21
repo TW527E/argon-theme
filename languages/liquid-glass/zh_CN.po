@@ -1,0 +1,267 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Liquid Glass Argon Theme 1.1.3\n"
+"Language: zh_CN\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Skip to content"
+msgstr "跳到主要内容"
+
+msgid "Main navigation"
+msgstr "主导航"
+
+msgid "Home"
+msgstr "首页"
+
+msgid "Sidebar"
+msgstr "侧栏"
+
+msgid "Menu"
+msgstr "菜单"
+
+msgid "Search"
+msgstr "搜索"
+
+msgid "Dark mode"
+msgstr "深色模式"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Browse posts"
+msgstr "浏览文章"
+
+msgid "Latest posts"
+msgstr "最新文章"
+
+msgid "Browse"
+msgstr "浏览"
+
+msgid "Untitled"
+msgstr "未命名"
+
+msgid "Read %s"
+msgstr "阅读《%s》"
+
+msgid "Read article"
+msgstr "阅读文章"
+
+msgid "Page not found"
+msgstr "找不到页面"
+
+msgid "Use search to find a post, or head back to the homepage."
+msgstr "可以搜索文章，或返回首页继续浏览。"
+
+msgid "Search results for “%s”"
+msgstr "“%s”的搜索结果"
+
+msgid "No posts yet"
+msgstr "暂无文章"
+
+msgid "Write a post"
+msgstr "撰写文章"
+
+msgid "Based on"
+msgstr "源自主题"
+
+msgid "Liquid Glass Settings"
+msgstr "Liquid Glass 主题设置"
+
+msgid "Open sidebar"
+msgstr "打开侧栏"
+
+msgid "Pink mode"
+msgstr "粉色模式"
+
+msgid "Glass palette"
+msgstr "玻璃配色"
+
+msgid "Warm"
+msgstr "暖色"
+
+msgid "Pink"
+msgstr "粉色"
+
+msgid "Default visibility of notes on the posts page"
+msgstr "首页说说默认显示"
+
+msgid "Visitors can change this setting for their own view on the posts page."
+msgstr "访客可以在首页自行切换说说的显示状态。"
+
+msgid "No notes yet"
+msgstr "暂无说说"
+
+msgid "Article list"
+msgstr "文章列表"
+
+msgid "List posts with optional dates, excerpts, and featured images."
+msgstr "列出文章，可显示日期、摘要和特色图片。"
+
+msgid "Appearance settings"
+msgstr "外观设置"
+
+msgid "Show notes"
+msgstr "显示说说"
+
+msgid "Hide notes"
+msgstr "隐藏说说"
+
+msgid "Lightweight mode"
+msgstr "轻量模式"
+
+msgid "Appearance"
+msgstr "外观"
+
+msgid "Header and background"
+msgstr "顶栏与背景"
+
+msgid "Posts and notes"
+msgstr "文章与说说"
+
+msgid "Sidebar and footer"
+msgstr "侧栏与页脚"
+
+msgid "Comments"
+msgstr "评论"
+
+msgid "Search and SEO"
+msgstr "搜索与 SEO"
+
+msgid "Media and code"
+msgstr "媒体与代码"
+
+msgid "Advanced"
+msgstr "高级"
+
+msgid "Backups"
+msgstr "备份与还原"
+
+msgid "Allow visitors to change the accent color"
+msgstr "允许访客自定义主题色"
+
+msgid "Enable reply notifications by default"
+msgstr "默认勾选回复通知"
+
+msgid "Article age calculation"
+msgstr "文章过时判定依据"
+
+msgid "Show an old-article notice after this many days"
+msgstr "在指定天数后显示文章过时通知"
+
+msgid "Old-article notice placement"
+msgstr "文章过时通知位置"
+
+msgid "Old-article notice text"
+msgstr "文章过时通知文字"
+
+msgid "Top bar scrim"
+msgstr "顶栏遮罩"
+
+msgid "Custom CDN URL"
+msgstr "自定义 CDN 网址"
+
+msgid "Argon attribution"
+msgstr "Argon 来源标注"
+
+msgid "Donation QR code"
+msgstr "赞赏二维码"
+
+msgid "Donation link"
+msgstr "赞赏链接"
+
+msgid "Open donation link"
+msgstr "打开赞赏链接"
+
+msgid "Footer additional content"
+msgstr "页脚附加内容"
+
+msgid "Choose an image from the media library or enter an image URL."
+msgstr "可从媒体库选图，也可粘贴图片网址。"
+
+msgid "Choose from media library"
+msgstr "从媒体库选图"
+
+msgid "Optional. Visitors can click the QR code to open this address."
+msgstr "选填。访客可点击二维码打开此网址。"
+
+msgid "Leave empty to use the bundled wallpaper."
+msgstr "留空时使用主题内置壁纸。"
+
+msgid "Use -1 to disable the old-article notice."
+msgstr "设为 -1 可关闭文章过时通知。"
+
+msgid "Choose which fields to show and move them into the order you want."
+msgstr "选择要显示的字段，并用上下按钮调整顺序。"
+
+msgid "Choose which post types appear and which are selected by default."
+msgstr "选择要显示的文章类型，以及默认勾选的项目。"
+
+msgid "Line breaks in this content are kept in the footer."
+msgstr "这段内容的换行会显示在页脚。"
+
+msgid "Choose the initial color mode for visitors."
+msgstr "设置访客首次访问时的明暗模式。"
+
+msgid "Selected by default"
+msgstr "默认勾选"
+
+msgid "Move %s up"
+msgstr "向上移动“%s”"
+
+msgid "Move %s down"
+msgstr "向下移动“%s”"
+
+msgid "Only administrators with permission to edit unfiltered HTML can change this field."
+msgstr "具备未过滤 HTML 编辑权限的管理员可以修改此字段。"
+
+msgid "View category and tag IDs"
+msgstr "查看分类与标签 ID"
+
+msgid "View site"
+msgstr "查看网站"
+
+msgid "Settings saved."
+msgstr "设置已保存。"
+
+msgid "Settings imported and saved."
+msgstr "已导入并保存设置。"
+
+msgid "Check the values or JSON format and try again."
+msgstr "请确认字段值或 JSON 格式，再试一次。"
+
+msgid "Settings sections"
+msgstr "设置分类"
+
+msgid "Save changes"
+msgstr "保存更改"
+
+msgid "Export settings"
+msgstr "导出设置"
+
+msgid "Download JSON"
+msgstr "下载 JSON"
+
+msgid "Import settings"
+msgstr "导入设置"
+
+msgid "Paste a Liquid Glass or Argon JSON backup. Settings included in the backup will be updated."
+msgstr "粘贴 Liquid Glass 或 Argon 的 JSON 备份。系统会更新备份里的设置。"
+
+msgid "Import and save"
+msgstr "导入并保存"
+
+msgid "You are not allowed to change theme settings."
+msgstr "你没有修改主题设置的权限。"
+
+msgid "Responsive columns"
+msgstr "自动调整列数"
+
+msgid "Use the accent color as the base tint for backgrounds and cards."
+msgstr "使用主题色为背景和卡片上色。"
+
+msgid "Read note"
+msgstr "阅读说说"
+
+msgid "Settings could not be saved. Your changes are still in the form."
+msgstr "设置保存失败。当前输入仍保留在表单中。"

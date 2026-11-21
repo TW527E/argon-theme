@@ -1,42 +1,19 @@
 <?php
-if (version_compare( $GLOBALS['wp_version'], '4.4-alpha', '<' )) {
-	echo "<div style='background: #5e72e4;color: #fff;font-size: 30px;padding: 50px 30px;position: fixed;width: 100%;left: 0;right: 0;bottom: 0;z-index: 2147483647;'>" . __("Argon 主题不支持 Wordpress 4.4 以下版本，请更新 Wordpress", 'argon') . "</div>";
-}
+require_once get_template_directory() . '/inc/presentation.php';
+
 function theme_slug_setup() {
 	add_theme_support('title-tag');
 	add_theme_support('post-thumbnails');
+	load_theme_textdomain('liquid-glass', get_template_directory() . '/languages/liquid-glass');
 	load_theme_textdomain('argon', get_template_directory() . '/languages');
 }
 add_action('after_setup_theme','theme_slug_setup');
 
-$argon_version = !(wp_get_theme() -> Template) ? wp_get_theme() -> Version : wp_get_theme(wp_get_theme() -> Template) -> Version;
-$GLOBALS['theme_version'] = $argon_version;
-$argon_assets_path = get_option("argon_assets_path");
-switch ($argon_assets_path) {
-    case "jsdelivr":
-	    $GLOBALS['assets_path'] = "https://cdn.jsdelivr.net/gh/solstice23/argon-theme@" . $argon_version;
-        break;
-    case "fastgit":
-	    $GLOBALS['assets_path'] = "https://raw.fastgit.org/solstice23/argon-theme/v" . $argon_version;
-        break;
-    case "sourcegcdn":
-	    $GLOBALS['assets_path'] = "https://gh.sourcegcdn.com/solstice23/argon-theme/v" . $argon_version;
-        break;
-	case "jsdelivr_gcore":
-	    $GLOBALS['assets_path'] = "https://gcore.jsdelivr.net/gh/solstice23/argon-theme@" . $argon_version;
-        break;
-	case "jsdelivr_fastly":
-	    $GLOBALS['assets_path'] = "https://fastly.jsdelivr.net/gh/solstice23/argon-theme@" . $argon_version;
-        break;
-	case "jsdelivr_cf":
-	    $GLOBALS['assets_path'] = "https://testingcf.jsdelivr.net/gh/solstice23/argon-theme@" . $argon_version;
-        break;
-	case "custom":
-		$GLOBALS['assets_path'] = preg_replace('/\/$/', '', get_option("argon_custom_assets_path"));
-		$GLOBALS['assets_path'] = preg_replace('/%theme_version%/', $argon_version, $GLOBALS['assets_path']);
-		break;
-    default:
-	    $GLOBALS['assets_path'] = get_bloginfo('template_url');
+$GLOBALS['theme_version'] = wp_get_theme(get_template())->get('Version');
+$GLOBALS['assets_path'] = get_template_directory_uri();
+if (get_option('argon_assets_path') === 'custom') {
+	$asset_path = str_replace('%theme_version%', $GLOBALS['theme_version'], get_option('argon_custom_assets_path', ''));
+	$GLOBALS['assets_path'] = untrailingslashit(esc_url_raw($asset_path)) ?: $GLOBALS['assets_path'];
 }
 
 //翻译 Hook
@@ -77,7 +54,7 @@ $argon_last_version = get_option("argon_last_version");
 if ($argon_last_version == ""){
 	$argon_last_version = "0.0";
 }
-if (version_compare($argon_last_version, $GLOBALS['theme_version'], '<' )){
+if (version_compare($argon_last_version, LIQUID_GLASS_ARGON_VERSION, '<' )){
 	if (version_compare($argon_last_version, '0.940', '<')){
 		if (get_option('argon_mathjax_v2_enable') == 'true' && get_option('argon_mathjax_enable') != 'true'){
 			update_option("argon_math_render", 'mathjax2');
@@ -117,67 +94,10 @@ if (version_compare($argon_last_version, $GLOBALS['theme_version'], '<' )){
 				break;
 		}		
 	}
-	update_option("argon_last_version", $GLOBALS['theme_version']);
+	update_option("argon_last_version", LIQUID_GLASS_ARGON_VERSION);
 }
 
 
-//检测更新
-require_once(get_template_directory() . '/theme-update-checker/plugin-update-checker.php');
-$argon_update_source = get_option('argon_update_source');
-switch ($argon_update_source) {
-	case "stop":
-		break;
-    case "fastgit":
-	    $argonThemeUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-			'https://api.solstice23.top/argon/info.json?source=fastgit',
-			get_template_directory() . '/functions.php',
-			'argon'
-		);
-        break;
-    case "cfworker":
-	    $argonThemeUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-			'https://api.solstice23.top/argon/info.json?source=cfworker',
-			get_template_directory() . '/functions.php',
-			'argon'
-		);
-        break;
-	case "solstice23top":
-		$argonThemeUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-			'https://api.solstice23.top/argon/info.json?source=0',
-			get_template_directory() . '/functions.php',
-			'argon'
-		);
-		break;
-	case "github":
-    default:
-		$argonThemeUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-			'https://raw.githubusercontent.com/solstice23/argon-theme/master/info.json',
-			get_template_directory() . '/functions.php',
-			'argon'
-		);
-}
-
-//初次使用时发送安装量统计信息 (数据仅用于统计安装量)
-function post_analytics_info(){
-	if(function_exists('file_get_contents')){
-		$contexts = stream_context_create(
-			array(
-				'http' => array(
-					'method'=>"GET",
-					'header'=>"User-Agent: ArgonTheme\r\n"
-				)
-			)
-		);
-		$result = file_get_contents('http://api.solstice23.top/argon_analytics/index.php?domain=' . urlencode($_SERVER['HTTP_HOST']) . '&version='. urlencode($GLOBALS['theme_version']), false, $contexts);
-		update_option('argon_has_inited', 'true');
-		return $result;
-	}else{
-		update_option('argon_has_inited', 'true');
-	}
-}
-if (get_option('argon_has_inited') != 'true'){
-	post_analytics_info();
-}
 //时区修正
 if (get_option('argon_enable_timezone_fix') == 'true'){
 	date_default_timezone_set('UTC');
@@ -231,7 +151,7 @@ function argon_add_admin_color(){
 }
 add_action('admin_init', 'argon_add_admin_color');
 function argon_admin_themecolor_css(){
-	$themecolor = get_option("argon_theme_color", "#5e72e4");
+	$themecolor = liquid_glass_theme_color();
 	$RGB = hexstr2rgb($themecolor);
 	$HSL = rgb2hsl($RGB['R'], $RGB['G'], $RGB['B']);
 	echo "
@@ -285,9 +205,12 @@ function argon_get_first_image_of_article(){
 		return false;
 	}
 	$post_content_full = apply_filters('the_content', preg_replace( '<!--more(.*?)-->', '', $post -> post_content));
-	preg_match('/<img(.*?)(src|data-original)=[\"\']((http:|https:)?\/\/(.*?))[\"\'](.*?)\/?>/', $post_content_full, $match);
-	if (isset($match[3])){
-		return $match[3];
+	$tags = new WP_HTML_Tag_Processor($post_content_full);
+	while ($tags->next_tag('IMG')) {
+		$source = $tags->get_attribute('data-full-url') ?: $tags->get_attribute('src');
+		if (is_string($source) && ($url = esc_url_raw($source, ['http', 'https']))) {
+			return $url;
+		}
 	}
 	return false;
 }
@@ -296,7 +219,7 @@ function argon_has_post_thumbnail($postID = 0){
 		global $post;
 		$postID = $post -> ID;
 	}
-	if (has_post_thumbnail()){
+	if (has_post_thumbnail($postID)){
 		return true;
 	}
 	$argon_first_image_as_thumbnail = get_post_meta($postID, 'argon_first_image_as_thumbnail', true);
@@ -315,7 +238,7 @@ function argon_get_post_thumbnail($postID = 0){
 		global $post;
 		$postID = $post -> ID;
 	}
-	if (has_post_thumbnail()){
+	if (has_post_thumbnail($postID)){
 		return apply_filters("argon_post_thumbnail", wp_get_attachment_image_src(get_post_thumbnail_id($postID), "full")[0]);
 	}
 	return apply_filters("argon_post_thumbnail", argon_get_first_image_of_article());
@@ -348,6 +271,9 @@ function get_argon_formatted_paginate_links($maxPageNumbers, $extraClasses = '')
 		'show_all' => True
 	);
 	$res = paginate_links($args);
+	if (!is_string($res) || $res === '') {
+		return '';
+	}
 	//单引号转双引号 & 去除上一页和下一页按钮
 	$res = preg_replace(
 		'/\'/',
@@ -704,7 +630,7 @@ function get_article_meta($type){
 function get_article_reading_time_meta($post_content_full){
 	$post_content_full = apply_filters("argon_html_before_wordcount", $post_content_full);
 	$words = get_article_words($post_content_full);
-	$res = '</br><div class="post-meta-detail post-meta-detail-words">
+	$res = '<br><div class="post-meta-detail post-meta-detail-words">
 		<i class="fa fa-file-word-o" aria-hidden="true"></i>';
 	if ($words['code'] > 0){
 		$res .= '<span title="' . sprintf(__( '包含 %d 行代码', 'argon'), $words['code']) . '">';
@@ -1895,36 +1821,34 @@ function get_banner_background_url(){
 		return $url;
 	}
 }
-//Lazyload 对 <img> 标签预处理以加载 Lazyload
-function argon_lazyload($content){
-	$lazyload_loading_style = get_option('argon_lazyload_loading_style');
-	if ($lazyload_loading_style == ''){
-		$lazyload_loading_style = 'none';
+function argon_fancybox($content) {
+	if (is_feed() || is_robots() || is_home()) {
+		return $content;
 	}
-	$lazyload_loading_style = "lazyload-style-" . $lazyload_loading_style;
 
-	if(!is_feed() && !is_robots() && !is_home()){
-		$content = preg_replace('/<img(.*?)src=[\'"](.*?)[\'"](.*?)((\/>)|(<\/img>))/i',"<img class=\"lazyload " . $lazyload_loading_style . "\" src=\"data:image/svg+xml;base64,PCEtLUFyZ29uTG9hZGluZy0tPgo8c3ZnIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjZmZmZmZmMDAiPjxnPjwvZz4KPC9zdmc+\" \$1data-original=\"\$2\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC\"\$3$4" , $content);
-		$content = preg_replace('/<img(.*?)data-full-url=[\'"]([^\'"]+)[\'"](.*)>/i',"<img$1data-full-url=\"$2\" data-original=\"$2\"$3>" , $content);
-		$content = preg_replace('/<img(.*?)srcset=[\'"](.*?)[\'"](.*?)>/i',"<img$1$3>" , $content);
-	}
-	return $content;
-}
-function argon_fancybox($content){
-	if(!is_feed() && !is_robots() && !is_home()){
-		if (get_option('argon_enable_lazyload') != 'false'){
-			$content = preg_replace('/<img(.*?)data-original=[\'"](.*?)[\'"](.*?)((\/>)|>|(<\/img>))/i',"<div class='fancybox-wrapper lazyload-container-unload' data-fancybox='post-images' href='$2'>$0</div>" , $content);
-		}else{
-			$content = preg_replace('/<img(.*?)src=[\'"](.*?)[\'"](.*?)((\/>)|>|(<\/img>))/i',"<div class='fancybox-wrapper' data-fancybox='post-images' href='$2'>$0</div>" , $content);
+	$tags = new WP_HTML_Tag_Processor($content);
+	$linked = false;
+	while ($tags->next_tag(['tag_closers' => 'visit'])) {
+		if ($tags->get_tag() === 'A') {
+			$linked = !$tags->is_tag_closer();
+		}
+		if ($linked || $tags->get_tag() !== 'IMG' || $tags->get_attribute('data-fancybox') !== null) {
+			continue;
+		}
+		$source = $tags->get_attribute('data-full-url') ?: $tags->get_attribute('src');
+		$url = is_string($source) ? esc_url_raw($source, ['http', 'https']) : '';
+		if ($url !== '') {
+			$tags->set_attribute('data-fancybox', 'post-images');
+			$tags->set_attribute('data-src', $url);
+			$tags->set_attribute('data-type', 'image');
+			$tags->set_attribute('tabindex', '0');
 		}
 	}
-	return $content;
+	return $tags->get_updated_html();
 }
-function the_content_filter($content){
-	if (get_option('argon_enable_lazyload') != 'false'){
-		$content = argon_lazyload($content);
-	}
-	if (get_option('argon_enable_fancybox') != 'false' && get_option('argon_enable_zoomify') == 'false'){
+
+function the_content_filter($content) {
+	if (get_option('argon_enable_fancybox') !== 'false' && get_option('argon_enable_zoomify', 'false') === 'false') {
 		$content = argon_fancybox($content);
 	}
 	global $post;
@@ -2011,7 +1935,7 @@ function alert_footer_copyright_changed(){ ?>
 	</div>
 <?php }
 function check_footer_copyright(){
-	$footer = file_get_contents(get_theme_root() . "/" . wp_get_theme() -> template . "/footer.php");
+	$footer = file_get_contents(get_template_directory() . "/footer.php");
 	if ((strpos($footer, "github.com/solstice23/argon-theme") === false) && (strpos($footer, "solstice23.top") === false)){
 		add_action('admin_notices', 'alert_footer_copyright_changed');
 	}
@@ -2335,16 +2259,27 @@ function update_post_meta_ajax(){
 	}
 }
 add_action('wp_ajax_update_post_meta_ajax' , 'update_post_meta_ajax');
-//首页显示说说
-function argon_home_add_post_type_shuoshuo($query){
-	if (is_home() && $query -> is_main_query()){
-		$query -> set('post_type', array('post', 'shuoshuo'));
+function liquid_glass_home_shows_notes() {
+	$choice = $_GET['liquid_notes'] ?? '';
+	if ($choice === 'show' || $choice === 'hide') {
+		return $choice === 'show';
 	}
-	return $query;
+	return get_option('argon_home_show_shuoshuo') === 'true';
 }
-if (get_option("argon_home_show_shuoshuo") == "true"){
-	add_action('pre_get_posts', 'argon_home_add_post_type_shuoshuo');
+
+function argon_home_add_post_type_shuoshuo($query){
+	if (is_admin() || !$query->is_main_query() || !$query->is_home()) {
+		return;
+	}
+
+	$show_notes = $query->is_feed()
+		? get_option('argon_home_show_shuoshuo') === 'true'
+		: liquid_glass_home_shows_notes();
+	if ($show_notes) {
+		$query->set('post_type', ['post', 'shuoshuo']);
+	}
 }
+add_action('pre_get_posts', 'argon_home_add_post_type_shuoshuo');
 //首页隐藏特定分类文章
 function argon_home_hide_categories($query){
 	if (is_home() && $query -> is_main_query()){
@@ -3092,13 +3027,8 @@ function argon_tinymce_add_plugin($plugins){
 	$plugins['hiddentext'] = get_bloginfo('template_url') . '/assets/tinymce_assets/tinymce_btns.js';
 	return $plugins;
 }
-//主题选项页面
-function themeoptions_admin_menu(){
-	/*后台管理面板侧栏添加选项*/
-	add_menu_page(__("Argon 主题设置", 'argon'), __("Argon 主题选项", 'argon'), 'edit_theme_options', basename(__FILE__), 'themeoptions_page');
-}
-include_once(get_template_directory() . '/settings.php');
-	
+require_once get_template_directory() . '/settings.php';
+
 /*主题菜单*/
 add_action('init', 'init_nav_menus');
 function init_nav_menus(){

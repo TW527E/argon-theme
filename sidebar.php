@@ -1,8 +1,8 @@
-<?php if (get_option('argon_page_layout', 'double') == 'single') {
+<?php if (get_option('argon_page_layout', 'double-reverse') == 'single') {
 	return;
 } ?>
 <div id="sidebar_mask"></div>
-<aside id="leftbar" class="leftbar widget-area" role="complementary">
+<aside id="leftbar" class="leftbar widget-area" aria-label="<?php esc_attr_e('Sidebar', 'liquid-glass'); ?>">
 		<?php if (get_option('argon_sidebar_announcement') != '') { ?>
 			<div id="leftbar_announcement" class="card bg-white shadow-sm border-0">
 				<div class="leftbar-announcement-body">
@@ -12,8 +12,8 @@
 			</div>
 		<?php } ?>
 		<div id="leftbar_part1" class="widget widget_search card bg-white shadow-sm border-0">
-			<div class="leftbar-banner card-body">
-				<span class="leftbar-banner-title text-white"><?php echo get_option('argon_sidebar_banner_title') == '' ? bloginfo('name') : get_option('argon_sidebar_banner_title'); ?></span>
+			<div class="liquid-sidebar-heading">
+				<h2><?php echo wp_kses_post(get_option('argon_sidebar_banner_title') ?: __('Browse', 'liquid-glass')); ?></h2>
 
 				<?php 
 					$sidebar_subtitle = get_option('argon_sidebar_banner_subtitle'); 
@@ -22,51 +22,23 @@
 					}
 				?>
 				<?php if ($sidebar_subtitle != '') { /*左侧栏子标题/格言(如果选项中开启)*/?>
-					<span class="leftbar-banner-subtitle text-white"><?php echo $sidebar_subtitle; ?></span>
+					<span class="liquid-sidebar-subtitle"><?php echo $sidebar_subtitle; ?></span>
 				<?php } /*顶栏标题*/?>
 
 			</div>
 
-			<?php
-				/*侧栏上部菜单*/
-				class leftbarMenuWalker extends Walker_Nav_Menu{
-					public function start_lvl( &$output, $depth = 0, $args = array() ) {
-						$indent = str_repeat("\t", $depth);
-						$output .= "\n$indent<ul class=\"leftbar-menu-item leftbar-menu-subitem shadow-sm\">\n";
+			<ul id="leftbar_part1_menu" class="liquid-category-list">
+				<?php
+					if (has_nav_menu('leftbar_menu')) {
+						wp_nav_menu(['theme_location' => 'leftbar_menu', 'container' => false, 'items_wrap' => '%3$s', 'fallback_cb' => false]);
+					} else {
+						wp_list_categories(['title_li' => '', 'number' => 6, 'show_count' => true, 'hide_empty' => true, 'hierarchical' => false]);
 					}
-					public function end_lvl( &$output, $depth = 0, $args = array() ) {
-						$indent = str_repeat("\t", $depth);
-						$output .= "\n$indent</ul>\n";
-					}
-					public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
-						$output .= "\n
-						<li class='leftbar-menu-item" . ( $args -> walker -> has_children == 1 ? " leftbar-menu-item-haschildren" : "" ) . ( $object -> current == 1 ? " current" : "" ) . "'>
-							<a href='" . $object -> url . "'" . ( $args -> walker -> has_children == 1 ? " no-pjax onclick='return false;'" : "" ) . " target='" . $object -> target . "'>". $object -> title . "</a>";
-					}
-					public function end_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
-						//if ($depth == 0){
-							$output .= "</li>";
-						//}
-					}
-				}
-				echo "<ul id='leftbar_part1_menu' class='leftbar-menu'>";
-				if ( has_nav_menu('leftbar_menu') ){
-					wp_nav_menu( array(
-						'container'  => '',
-						'theme_location'  => 'leftbar_menu',
-						'items_wrap'  => '%3$s',
-						'depth' => 0,
-						'walker' => new leftbarMenuWalker()
-					) );
-				}
-				echo "</ul>";
-			?>
-			<div class="card-body text-center leftbar-search-button">
-				<button id="leftbar_search_container" class="btn btn-secondary btn-lg active btn-sm btn-block border-0" role="button">
-					<i class="menu-item-icon fa fa-search mr-0"></i> <?php _e('搜索', 'argon');?>
-					<input id="leftbar_search_input" type="text" placeholder="<?php _e('搜索什么...', 'argon');?>" class="form-control form-control-alternative" autocomplete="off">
-				</button>
-			</div>
+				?>
+			</ul>
+			<button type="button" class="liquid-side-search" data-toggle="modal" data-target="#argon_search_modal">
+				<i class="fa fa-search" aria-hidden="true"></i> <?php esc_html_e('Search', 'liquid-glass'); ?>
+			</button>
 		</div>
 		<div id="leftbar_part2" class="widget widget_search card bg-white shadow-sm border-0">
 			<div id="leftbar_part2_inner" class="card-body">
@@ -124,9 +96,14 @@
 							</div>
 						<?php } ?>
 						<div class="tab-pane fade text-center<?php if ($nowActiveTab == 1) { echo ' active show'; }?>" id="leftbar_tab_overview" role="tabpanel" aria-labelledby="leftbar_tab_overview_btn">
-							<div id="leftbar_overview_author_image" style="background-image: url(<?php echo get_option('argon_sidebar_auther_image') == '' ? 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cmVjdCBmaWxsPSIjNUU3MkU0MjIiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIi8+PGc+PGcgb3BhY2l0eT0iMC4zIj48cGF0aCBmaWxsPSIjNUU3MkU0IiBkPSJNNzQuMzksMzIuODZjLTAuOTgtMS43LTMuMzktMy4wOS01LjM1LTMuMDlINDUuNjJjLTEuOTYsMC00LjM3LDEuMzktNS4zNSwzLjA5TDI4LjU3LDUzLjE1Yy0wLjk4LDEuNy0wLjk4LDQuNDgsMCw2LjE3bDExLjcxLDIwLjI5YzAuOTgsMS43LDMuMzksMy4wOSw1LjM1LDMuMDloMjMuNDNjMS45NiwwLDQuMzctMS4zOSw1LjM1LTMuMDlMODYuMSw1OS4zMmMwLjk4LTEuNywwLjk4LTQuNDgsMC02LjE3TDc0LjM5LDMyLjg2eiIvPjwvZz48ZyBvcGFjaXR5PSIwLjgiPjxwYXRoIGZpbGw9IiM1RTcyRTQiIGQ9Ik02Mi4wNCwyMC4zOWMtMC45OC0xLjctMy4zOS0zLjA5LTUuMzUtMy4wOUgzMS43M2MtMS45NiwwLTQuMzcsMS4zOS01LjM1LDMuMDlMMTMuOSw0Mi4wMWMtMC45OCwxLjctMC45OCw0LjQ4LDAsNi4xN2wxMi40OSwyMS42MmMwLjk4LDEuNywzLjM5LDMuMDksNS4zNSwzLjA5aDI0Ljk3YzEuOTYsMCw0LjM3LTEuMzksNS4zNS0zLjA5bDEyLjQ5LTIxLjYyYzAuOTgtMS43LDAuOTgtNC40OCwwLTYuMTdMNjIuMDQsMjAuMzl6Ii8+PC9nPjwvZz48L3N2Zz4=' : get_option('argon_sidebar_auther_image'); ?>)" class="rounded-circle shadow-sm" alt="avatar"></div>
-							<h6 id="leftbar_overview_author_name"><?php echo get_option('argon_sidebar_auther_name') == '' ? bloginfo('name') : get_option('argon_sidebar_auther_name'); ?></h6>
-							<?php $author_desctiption = get_option('argon_sidebar_author_description'); if (!empty($author_desctiption)) {echo '<h6 id="leftbar_overview_author_description">'. $author_desctiption .'</h6>';}?>
+							<?php $avatar = esc_url(get_option('argon_sidebar_auther_image') ?: get_site_icon_url(96)); ?>
+							<?php if ($avatar) : ?>
+								<img id="leftbar_overview_author_image" src="<?php echo $avatar; ?>" alt="" width="60" height="60" decoding="async">
+							<?php else : ?>
+								<div class="liquid-profile-mark" aria-hidden="true"><i class="fa fa-bookmark-o"></i></div>
+							<?php endif; ?>
+							<h2 id="leftbar_overview_author_name"><?php echo wp_kses_post(get_option('argon_sidebar_auther_name') ?: get_bloginfo('name')); ?></h2>
+							<?php $author_description = get_option('argon_sidebar_author_description'); if (!empty($author_description)) {echo '<p id="leftbar_overview_author_description">'. $author_description .'</p>';}?>
 							<nav class="site-state">
 								<div class="site-state-item site-state-posts">
 									<a <?php $archives_page_url = get_option('argon_archives_timeline_url'); echo (empty($archives_page_url) ? ' style="cursor: default;"' : 'href="' . $archives_page_url . '"');?>>
@@ -135,16 +112,16 @@
 									</a>
 								</div>
 								<div class="site-state-item site-state-categories">
-									<a data-toggle="modal" data-target="#blog_categories">
+									<button type="button" data-toggle="modal" data-target="#blog_categories">
 										<span class="site-state-item-count"><?php echo wp_count_terms('category'); ?></span>
 										<span class="site-state-item-name"><?php _e('分类', 'argon');?></span>
-									</a>
+									</button>
 								</div>      
 								<div class="site-state-item site-state-tags">
-									<a data-toggle="modal" data-target="#blog_tags">
+									<button type="button" data-toggle="modal" data-target="#blog_tags">
 										<span class="site-state-item-count"><?php echo wp_count_terms('post_tag'); ?></span>
 										<span class="site-state-item-name"><?php _e('标签', 'argon');?></span>
-									</a>
+									</button>
 								</div>
 							</nav>
 							<?php
@@ -225,11 +202,11 @@
 			</div>
 		</div>
 </aside>
-<div class="modal fade" id="blog_categories" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="blog_categories" tabindex="-1" role="dialog" aria-labelledby="liquid-categories-title" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title"><?php _e('分类', 'argon');?></h5>
+				<h5 class="modal-title" id="liquid-categories-title"><?php _e('分类', 'argon');?></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -253,11 +230,11 @@
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="blog_tags" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="blog_tags" tabindex="-1" role="dialog" aria-labelledby="liquid-tags-title" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title"><?php _e('标签', 'argon');?></h5>
+				<h5 class="modal-title" id="liquid-tags-title"><?php _e('标签', 'argon');?></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>

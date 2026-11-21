@@ -5,7 +5,7 @@
 <?php get_sidebar(); ?>
 
 <div id="primary" class="content-area">
-	<main id="main" class="site-main" role="main">
+	<main id="main" tabindex="-1" class="site-main" role="main">
 		<?php
 		while ( have_posts() ) :
 			the_post();
@@ -95,7 +95,7 @@
 							<i class="related-post-arrow fa fa-chevron-right" aria-hidden="true"></i>
 							</div>';
 						if ($hasThumbnail){
-							echo '<img class="related-post-thumbnail lazyload" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABBJREFUeNpi+P//PwNAgAEACPwC/tuiTRYAAAAASUVORK5CYII=" data-original="' .  argon_get_post_thumbnail(get_the_ID()) . '"/>';
+							liquid_glass_thumbnail(argon_get_post_thumbnail(), 'medium_large', ['class' => 'related-post-thumbnail', 'loading' => 'lazy', 'alt' => '']);
 						}
 						echo '</a>';
 					}

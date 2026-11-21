@@ -1,47 +1,38 @@
-<?php 
+<?php
 /*
 Template Name: 说说
 */
-query_posts("post_type=shuoshuo&post_status=publish&posts_per_page=-1");
+get_header();
+$notes = new WP_Query([
+	'post_type' => 'shuoshuo',
+	'post_status' => 'publish',
+	'posts_per_page' => -1,
+	'no_found_rows' => true,
+]);
 ?>
-
-<?php get_header(); ?>
-
 <div class="page-information-card-container">
-	<div class="page-information-card card bg-gradient-secondary shadow-lg border-0">
+	<div class="page-information-card card">
 		<div class="card-body">
-			<h3 class="text-black"><?php _e('说说', 'argon');?></h3>
-			<?php if (the_archive_description() != ''){ ?>
-				<p class="text-black mt-3">
-					<?php the_archive_description(); ?>
-				</p>
-			<?php } ?>
-			<p class="text-black mt-3 mb-0 opacity-8">
-				<i class="fa fa-quote-left mr-1"></i>
-				<?php echo wp_count_posts('shuoshuo','') -> publish; ?> <?php _e('条说说', 'argon');?>
+			<h1><?php esc_html_e('说说', 'argon'); ?></h1>
+			<p class="mt-3 mb-0">
+				<?php echo esc_html(number_format_i18n($notes->post_count)); ?> <?php esc_html_e('条说说', 'argon'); ?>
 			</p>
 		</div>
 	</div>
 </div>
-
 <?php get_sidebar(); ?>
 
 <div id="primary" class="content-area">
-	<main id="main" class="site-main" role="main">
-	<?php if ( have_posts() ) : ?>
-		<?php
-			while ( have_posts() ) :
-				the_post();
-				get_template_part( 'template-parts/content', 'shuoshuo' );
-			endwhile;
-		?>
-		<?php
-			echo get_argon_formatted_paginate_links_for_all_platforms();
-		?>
-		<?php
-	else :
-		get_template_part( 'template-parts/content', 'none-tag' );
-	endif;
-	?>
+	<main id="main" class="site-main" tabindex="-1">
+		<?php if ($notes->have_posts()) : ?>
+			<?php while ($notes->have_posts()) : $notes->the_post(); ?>
+				<?php get_template_part('template-parts/content', 'shuoshuo'); ?>
+			<?php endwhile; ?>
+			<?php wp_reset_postdata(); ?>
+		<?php else : ?>
+			<div class="liquid-empty card">
+				<h2><?php esc_html_e('No notes yet', 'liquid-glass'); ?></h2>
+			</div>
+		<?php endif; ?>
 
 <?php get_footer(); ?>

@@ -1,0 +1,267 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Liquid Glass Argon Theme 1.1.3\n"
+"Language: ru_RU\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Skip to content"
+msgstr "Перейти к содержимому"
+
+msgid "Main navigation"
+msgstr "Главное меню"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Sidebar"
+msgstr "Боковая панель"
+
+msgid "Menu"
+msgstr "Меню"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Dark mode"
+msgstr "Тёмный режим"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Browse posts"
+msgstr "Смотреть записи"
+
+msgid "Latest posts"
+msgstr "Последние записи"
+
+msgid "Browse"
+msgstr "Разделы"
+
+msgid "Untitled"
+msgstr "Без названия"
+
+msgid "Read %s"
+msgstr "Читать «%s»"
+
+msgid "Read article"
+msgstr "Читать запись"
+
+msgid "Page not found"
+msgstr "Страница не найдена"
+
+msgid "Use search to find a post, or head back to the homepage."
+msgstr "Попробуйте найти запись через поиск или вернитесь на главную."
+
+msgid "Search results for “%s”"
+msgstr "Результаты поиска по запросу «%s»"
+
+msgid "No posts yet"
+msgstr "Записей пока нет"
+
+msgid "Write a post"
+msgstr "Написать запись"
+
+msgid "Based on"
+msgstr "На основе"
+
+msgid "Liquid Glass Settings"
+msgstr "Настройки Liquid Glass"
+
+msgid "Open sidebar"
+msgstr "Открыть боковую панель"
+
+msgid "Pink mode"
+msgstr "Розовый режим"
+
+msgid "Glass palette"
+msgstr "Палитра стекла"
+
+msgid "Warm"
+msgstr "Тёплая"
+
+msgid "Pink"
+msgstr "Розовая"
+
+msgid "Default visibility of notes on the posts page"
+msgstr "Видимость заметок на странице записей по умолчанию"
+
+msgid "Visitors can change this setting for their own view on the posts page."
+msgstr "Посетители могут менять видимость заметок на странице записей."
+
+msgid "No notes yet"
+msgstr "Заметок пока нет"
+
+msgid "Article list"
+msgstr "Список записей"
+
+msgid "List posts with optional dates, excerpts, and featured images."
+msgstr "Список записей с датами, отрывками и изображениями по желанию."
+
+msgid "Appearance settings"
+msgstr "Настройки оформления"
+
+msgid "Show notes"
+msgstr "Показать заметки"
+
+msgid "Hide notes"
+msgstr "Скрыть заметки"
+
+msgid "Lightweight mode"
+msgstr "Облегчённый режим"
+
+msgid "Appearance"
+msgstr "Внешний вид"
+
+msgid "Header and background"
+msgstr "Шапка и фон"
+
+msgid "Posts and notes"
+msgstr "Записи и заметки"
+
+msgid "Sidebar and footer"
+msgstr "Боковая панель и подвал"
+
+msgid "Comments"
+msgstr "Комментарии"
+
+msgid "Search and SEO"
+msgstr "Поиск и SEO"
+
+msgid "Media and code"
+msgstr "Медиа и код"
+
+msgid "Advanced"
+msgstr "Дополнительно"
+
+msgid "Backups"
+msgstr "Резервные копии"
+
+msgid "Allow visitors to change the accent color"
+msgstr "Разрешить посетителям менять цвет акцента"
+
+msgid "Enable reply notifications by default"
+msgstr "Уведомления об ответах по умолчанию"
+
+msgid "Article age calculation"
+msgstr "Расчёт возраста записи"
+
+msgid "Show an old-article notice after this many days"
+msgstr "Показывать уведомление об устаревании через указанное число дней"
+
+msgid "Old-article notice placement"
+msgstr "Расположение уведомления об устаревании"
+
+msgid "Old-article notice text"
+msgstr "Текст уведомления об устаревании"
+
+msgid "Top bar scrim"
+msgstr "Подложка верхней панели"
+
+msgid "Custom CDN URL"
+msgstr "URL пользовательской CDN"
+
+msgid "Argon attribution"
+msgstr "Указание авторства Argon"
+
+msgid "Donation QR code"
+msgstr "QR-код для пожертвований"
+
+msgid "Donation link"
+msgstr "Ссылка для пожертвований"
+
+msgid "Open donation link"
+msgstr "Открыть ссылку для пожертвований"
+
+msgid "Footer additional content"
+msgstr "Дополнительное содержимое подвала"
+
+msgid "Choose an image from the media library or enter an image URL."
+msgstr "Выберите изображение в медиатеке или укажите URL."
+
+msgid "Choose from media library"
+msgstr "Выбрать из медиатеки"
+
+msgid "Optional. Visitors can click the QR code to open this address."
+msgstr "Необязательно. При нажатии на QR-код откроется этот адрес."
+
+msgid "Leave empty to use the bundled wallpaper."
+msgstr "Оставьте пустым для использования встроенного фона."
+
+msgid "Use -1 to disable the old-article notice."
+msgstr "Укажите -1, чтобы отключить уведомление об устаревании."
+
+msgid "Choose which fields to show and move them into the order you want."
+msgstr "Выберите поля и расположите их в нужном порядке."
+
+msgid "Choose which post types appear and which are selected by default."
+msgstr "Выберите видимые типы записей и типы, выбранные по умолчанию."
+
+msgid "Line breaks in this content are kept in the footer."
+msgstr "Переносы строк в этом содержимом сохраняются в подвале."
+
+msgid "Choose the initial color mode for visitors."
+msgstr "Выберите начальный цветовой режим для посетителей."
+
+msgid "Selected by default"
+msgstr "Выбран по умолчанию"
+
+msgid "Move %s up"
+msgstr "Переместить «%s» вверх"
+
+msgid "Move %s down"
+msgstr "Переместить «%s» вниз"
+
+msgid "Only administrators with permission to edit unfiltered HTML can change this field."
+msgstr "Это поле могут менять только администраторы с правом редактирования нефильтрованного HTML."
+
+msgid "View category and tag IDs"
+msgstr "Показать ID рубрик и меток"
+
+msgid "View site"
+msgstr "Открыть сайт"
+
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+msgid "Settings imported and saved."
+msgstr "Настройки импортированы и сохранены."
+
+msgid "Check the values or JSON format and try again."
+msgstr "Проверьте значения или формат JSON и повторите попытку."
+
+msgid "Settings sections"
+msgstr "Разделы настроек"
+
+msgid "Save changes"
+msgstr "Сохранить изменения"
+
+msgid "Export settings"
+msgstr "Экспорт настроек"
+
+msgid "Download JSON"
+msgstr "Скачать JSON"
+
+msgid "Import settings"
+msgstr "Импорт настроек"
+
+msgid "Paste a Liquid Glass or Argon JSON backup. Settings included in the backup will be updated."
+msgstr "Вставьте резервную копию Liquid Glass или Argon в формате JSON. Настройки из копии будут обновлены."
+
+msgid "Import and save"
+msgstr "Импортировать и сохранить"
+
+msgid "You are not allowed to change theme settings."
+msgstr "У вас нет прав на изменение настроек темы."
+
+msgid "Responsive columns"
+msgstr "Адаптивные колонки"
+
+msgid "Use the accent color as the base tint for backgrounds and cards."
+msgstr "Использовать цвет акцента для фона и карточек."
+
+msgid "Read note"
+msgstr "Читать заметку"
+
+msgid "Settings could not be saved. Your changes are still in the form."
+msgstr "Настройки не сохранены. Введённые изменения остались в форме."

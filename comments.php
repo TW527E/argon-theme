@@ -153,7 +153,7 @@
 								<script>
 									$(".post-comment-captcha-container").attr("captcha", "Loading...");
 									$.ajax({
-										url : argonConfig.wp_path + "wp-admin/admin-ajax.php",
+										url : argonConfig.ajax_url,
 										type : "POST",
 										dataType : "json",
 										data : {
@@ -228,8 +228,8 @@
 					<?php } ?>
 				</div>
 			</div>
-			<input id="post_comment_captcha_seed" value="<?php echo $commentCaptchaSeed;?>" style="display: none;"></input>
-			<input id="post_comment_post_id" value="<?php echo get_the_ID();?>" style="display: none;"></input>
+			<input type="hidden" id="post_comment_captcha_seed" value="<?php echo esc_attr($commentCaptchaSeed ?? ''); ?>">
+			<input type="hidden" id="post_comment_post_id" value="<?php echo esc_attr(get_the_ID()); ?>">
 		</form>
 	</div>
 </div>
